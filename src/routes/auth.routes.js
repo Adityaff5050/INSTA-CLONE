@@ -7,7 +7,7 @@ const jwt=require("jsonwebtoken")
 
 const authRouter=express.Router()
 
-
+// registration //
 authRouter.post("/register",async(req,res)=>{
 const {email,username,password,bio,profileImage}=req.body
 
@@ -59,6 +59,55 @@ profileImage:user.profileImage
 })
 
 })
+//login//
+
+authRouter.post("/login",async(req,res)=>{
+    const {username,email,password}=req.body
+
+    const user=await userModel.findOne({
+       $or: [{
+            username:username
+        },
+    {
+        email:email
+    }]
+})
+
+if(!user){
+    return res.status(409).json({
+        msg:"User not found" 
+    })
+}
+
+const hash=crypto.createHash('sha256').update(password).digset('hex')
+
+const isPasswordValid=hash===user.password
+
+if(!isPasswordValid){
+    return res.status(401).json({
+        msg:"invalid password"
+    })
+}
+const token=jwt.sign({
+    id:user._id
+},process.env.JWT_SECRET)
+
+res.cookie("token",token)
+
+res.status(200).json({
+    msg:"User LoggedIn Successfully",
+    username:user.username,
+    email:user.email,
+    bio:user.bio,
+    profileImage:user.profileImage
+})
+
+})
+
+
+
+
+
 
 
 module.exports=authRouter
