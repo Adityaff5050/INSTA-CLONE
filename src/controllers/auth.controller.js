@@ -4,22 +4,10 @@ const jwt=require("jsonwebtoken")
 const bcrypt=require("bcryptjs")
 
 
-
+//registration//
 async function registerController(req,res){
 const {email,username,password,bio,profileImage}=req.body
 
-/* const isuserExistByEmail=await userModel.findOne({email})
-if(isuserExistByEmail){
-    return res.status(409).json({
-        msg:"email already exist plz try diff. email"
-    })
-}
-const isUserExistsByUsername=await userModel.findOne({username})
-if(isUserExistsByUsername){
-    return res.status(409).json({
-        msg:"this user name already  exists plz make diff. user name"
-    })
-}*/
 
 const isUserAlreadyExists=await userModel.findOne({
     $or:[
@@ -48,13 +36,14 @@ const token =jwt.sign({
 res.cookie("token",token)
 
 res.status(201).json({
-msg:"ser registered succesfully",
+msg:"user registered succesfully",
 username:user.username,
 email:user.email,
 bio:user.bio,
 profileImage:user.profileImage
 })
 }
+//login//
 
 async function loginController(req,res){
     const {username,email,password}=req.body
