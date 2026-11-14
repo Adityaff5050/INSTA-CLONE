@@ -13,9 +13,10 @@ console.log(req.body,req.file);
 
 const file=await imagekit.files.upload({
 file:await Imagekit.toFile(Buffer.from(req.file.buffer),'file'),
-fileName:"test"
+fileName:"test",
+folder:"insta-clone"
 })
-res.send(file)
+
 //how to check who created post ln 15 to ln 33 //
 const token=req.cookies.token
 
@@ -24,8 +25,14 @@ if(!token){
         msg:"You have not Token , Unsthorized access"
     })
 }
-const decoded=await jwt.verify(token,process.env.JWT_SECRET)
-
+let decoded
+try{
+decoded=await jwt.verify(token,process.env.JWT_SECRET)
+}catch(err){
+return res.status(401).json({
+    msg:"user not authorized"
+})
+}
 const post =await postModel.create({
     caption :req.body.caption,
     imgUrl:file.url,
