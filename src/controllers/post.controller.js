@@ -112,7 +112,7 @@ if(!post){
         msg:"post not found"
     })
 }
-const isValidUser=post.user===userId
+const isValidUser=post.user.toString()===userId
 
 if(!isValidUser){
     res.status(403).json({
