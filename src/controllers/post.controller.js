@@ -44,12 +44,92 @@ res.status(201).json({
     post
 })
 
+}
+/**
+ *  fetching a posts
+ */
 
+async function getPostController(req,res) {
+    
+    const token =req.cookies.token
+    
+     if(!token){
+        return res.status(404).json({
+            msg:"Unauthorized access"
+        })
+    }
+
+    let decoded
+    try{
+    decoded=jwt.verify(token,process.env.JWT_SECRET)
+    }catch(err){
+        return res.status(401).json({
+            msg:"Token invalid"
+        })
+    }
+
+    const UserId=decoded.id
+
+    const posts=await postModel.find({
+        user:UserId
+    })
+    res.status(200).json({
+        msg:"post fetched successfully",
+        posts
+    })
 
 
 }
 
 
+/**
+ *  finding a posts details
+ */
+async function getPostDetails(req,res) {
+    const token=req.cookies.token
+    if(!token){
+        return res.status(404).json({
+            msg:"Unauthorized access"
+        })
+    }
+
+    let decoded
+    try {
+        decoded=jwt.verify(token,process.env.JWT_SECRET)
+    } catch (err) {
+        return res.status(401).json({
+            msg:"invalid token"
+        })
+    }
+
+    const userId=decoded.id
+    const postId=req.params.postId
+
+const post=await postModel.findById(postId)
+
+if(!post){
+    return res.status(404).json({
+        msg:"post not found"
+    })
+}
+const isValidUser=post.user===userId
+
+if(!isValidUser){
+    res.status(403).json({
+        msg:"Forbidden content"
+    })
+}
+
+return res.status(200).json({
+    msg:"Post Fetched Successfully",
+    post
+})
+
+
+}
+
 module.exports={
     createPostController,
+    getPostController,
+    getPostDetails
 }
