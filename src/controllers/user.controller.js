@@ -15,6 +15,16 @@ async function followUserController(req,res) {
             msg:"You can't follow ypurself"
         })
     }
+        const isAlreadyFollowing=await followModel.findOne({
+            follower:followerUsername,
+            following:followingUsername
+        })
+        if(isAlreadyFollowing){
+            return res.status(409).json({
+                msg:`You already following ${followerUsername}`,
+                follow:isAlreadyFollowing
+            })
+        }
 
     const followRecord=await followModel.create({
         follower:followerUsername,
