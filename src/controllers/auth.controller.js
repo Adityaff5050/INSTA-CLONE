@@ -31,7 +31,8 @@ const user =await userModel.create({
     password:hash
 })
 const token =jwt.sign({
-    id:user._id
+    id:user._id,
+    username:user.username
 },process.env.JWT_SECRET)
 res.cookie("token",token)
 
@@ -72,7 +73,7 @@ if(!isPasswordValid){
     })
 }
 const token=jwt.sign({
-    id:user._id
+    id:user._id,username:user.username
 },process.env.JWT_SECRET)
 
 res.cookie("token",token)

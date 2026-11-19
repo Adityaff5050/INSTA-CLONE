@@ -2,7 +2,7 @@ const express=require("express")
 const postRouter=express.Router()
 const multer=require("multer")
 const postController =require("../controllers/post.controller")
-
+const identifyUser=require("../middlewares/auth.middleware")
 const upload=multer({storage:multer.memoryStorage()})
 /**
  * post /api/posts [protected]
