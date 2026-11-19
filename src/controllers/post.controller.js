@@ -18,13 +18,17 @@ folder:"insta-clone"
 })
 
 //how to check who created post ln 15 to ln 33 //
-const token=req.cookies.token
+/**const token=req.cookies.token
 
 if(!token){
     return res.status(401).json({
         msg:"You have not Token , Unsthorized access"
     })
 }
+**
+  * iska middle ware bana diya hain  auth.middleware.js 
+  * mein identify user naam ka
+  **
 let decoded
 try{
 decoded=await jwt.verify(token,process.env.JWT_SECRET)
@@ -33,10 +37,11 @@ return res.status(401).json({
     msg:"user not authorized"
 })
 }
+**/
 const post =await postModel.create({
     caption :req.body.caption,
     imgUrl:file.url,
-    user:decoded.id
+    user:req.user.id
 })
 
 res.status(201).json({
@@ -50,7 +55,7 @@ res.status(201).json({
  */
 
 async function getPostController(req,res) {
-    
+   /** 
     const token =req.cookies.token
     
      if(!token){
@@ -58,7 +63,10 @@ async function getPostController(req,res) {
             msg:"Unauthorized access"
         })
     }
-
+**
+  * iska middle ware bana diya hain  auth.middleware.js 
+  * mein identify user naam ka
+  **
     let decoded
     try{
     decoded=jwt.verify(token,process.env.JWT_SECRET)
@@ -67,8 +75,8 @@ async function getPostController(req,res) {
             msg:"Token invalid"
         })
     }
-
-    const UserId=decoded.id
+**/
+    const UserId=req.user.id
 
     const posts=await postModel.find({
         user:UserId
@@ -86,13 +94,16 @@ async function getPostController(req,res) {
  *  finding a posts details
  */
 async function getPostDetails(req,res) {
-    const token=req.cookies.token
+   /**  const token=req.cookies.token
     if(!token){
         return res.status(404).json({
             msg:"Unauthorized access"
         })
     }
-
+ **
+  * iska middle ware bana diya hain  auth.middleware.js 
+  * mein identify user naam ka
+  **
     let decoded
     try {
         decoded=jwt.verify(token,process.env.JWT_SECRET)
@@ -100,9 +111,9 @@ async function getPostDetails(req,res) {
         return res.status(401).json({
             msg:"invalid token"
         })
-    }
+    }**/
 
-    const userId=decoded.id
+    const userId=req.user.id
     const postId=req.params.postId
 
 const post=await postModel.findById(postId)
@@ -115,7 +126,7 @@ if(!post){
 const isValidUser=post.user.toString()===userId
 
 if(!isValidUser){
-    res.status(403).json({
+    return res.status(403).json({
         msg:"Forbidden content"
     })
 }

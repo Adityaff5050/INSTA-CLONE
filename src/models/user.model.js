@@ -19,7 +19,8 @@ const userSchema= new mongoose.Schema({
     profileImage:{
     type:String,
     default:"https://ik.imagekit.io/papatiwari007/default_user.jpg",
-    }
+    },
+ 
 })
     
 const userModel=mongoose.model("users",userSchema)
