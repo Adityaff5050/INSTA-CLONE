@@ -10,8 +10,11 @@ const userRouter=express.Router()
 
 userRouter.post("/follow/:username",identifyUser,userController.followUserController)
 
+/**
+ * user unfollow feature
+ * POST /api/users/unfollow/username
+ */
 
-
-
+userRouter.post("/unfollow/:username",identifyUser,userController.unfollowUserControlller)
 
 module.exports=userRouter
