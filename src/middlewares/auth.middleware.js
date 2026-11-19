@@ -1,0 +1,22 @@
+require("dotenv")
+
+async function identifyUser(req,res,next){
+     const token=req.cookies.token
+    if(!token){
+        return res.status(404).json({
+            msg:"Unauthorized access"
+        })
+    }
+
+    let decoded
+    try {
+        decoded=jwt.verify(token,process.env.JWT_SECRET)
+    } catch (err) {
+        return res.status(401).json({
+            msg:"invalid token"
+        })
+    }
+
+    req.user=decoded
+next()
+}
