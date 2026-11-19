@@ -8,7 +8,7 @@ const followModel=require("../models/follow.model")
  */
 async function followUserController(req,res) {
     const followerUsername =req.user.username
-    const followingUsername =req.user.username
+    const followingUsername =req.params.username
 
     if(followerUsername===followingUsername){
         return res.status(200).json({
