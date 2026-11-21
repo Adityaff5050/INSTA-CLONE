@@ -21,6 +21,7 @@ if(isUserAlreadyExists) {
             "email already exists" :"username already exists")
     })
 }
+console.log("REGISTER BODY:", req.body)
 const hash = await bcrypt.hash(password,10)
 
 const user =await userModel.create({
@@ -57,6 +58,8 @@ async function loginController(req,res){
         email:email
     }]
 })
+console.log("BODY:", req.body)
+    console.log("USER:", user?.username, user?.email)
 
 if(!user){
     return res.status(409).json({
@@ -64,7 +67,7 @@ if(!user){
     })
 }
 
-
+console.log("HASH:", user.password)
 const isPasswordValid= await bcrypt.compare(password,user.password)
 
 if(!isPasswordValid){
