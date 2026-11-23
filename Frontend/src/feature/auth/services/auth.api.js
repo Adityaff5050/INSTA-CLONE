@@ -19,8 +19,8 @@ export async function register(username, email, password) {
   try {
     const respone = await api.post("/register", {
       username,
-      password,
       email,
+      password
     });
     return respone.data;
   } catch (error) {
@@ -38,5 +38,13 @@ export async function login(username, password) {
 
   } catch (error) {
     throw error;
+  }
+}
+export async function getMe(){
+  try {
+    const response=await api.get("/get-me")
+    return response.data
+  } catch (error) {
+    throw error
   }
 }
